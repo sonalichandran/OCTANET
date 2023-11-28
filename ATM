@@ -79,7 +79,7 @@ class BankAccount {
     }
 }
 
-public class ATM extends JFrame {
+class ATM extends JFrame {
     private BankAccount userAccount;
 
     private JTextField pinField;
@@ -91,8 +91,8 @@ public class ATM extends JFrame {
     private JButton historyButton;
     private JButton exitButton;
 
-    private Color backgroundColor = new Color(50, 150, 50); // Greenish color
-    private Color foregroundColor = Color.RED;
+    private Color backgroundColor = Color.BLACK;
+    private Color foregroundColor = Color.WHITE;
 
     public ATM(BankAccount account) {
         userAccount = account;
@@ -101,67 +101,65 @@ public class ATM extends JFrame {
 
     private void initializeUI() {
         setTitle("ATM Interface");
-        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1));
-        panel.setBackground(backgroundColor); // Set background color
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(backgroundColor);
 
-        JPanel pinPanel = new JPanel();
-        pinPanel.setBackground(backgroundColor); // Set background color
+        JPanel inputPanel = new JPanel(new FlowLayout());
+        inputPanel.setBackground(backgroundColor);
         pinField = new JTextField(4);
-        pinField.setBackground(foregroundColor); // Set text field background color
-        pinField.setForeground(backgroundColor); // Set text field text color
+        pinField.setBackground(foregroundColor);
+        pinField.setForeground(backgroundColor);
         enterButton = new JButton("Enter");
         enterButton.addActionListener(e -> authenticatePin());
-        pinPanel.add(new JLabel("Enter your PIN:"));
-        pinPanel.add(pinField);
-        pinPanel.add(enterButton);
+        customizeButton(enterButton);
+        inputPanel.add(new JLabel("Enter your PIN:"));
+        inputPanel.add(pinField);
+        inputPanel.add(enterButton);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 4));
-        buttonPanel.setBackground(backgroundColor); // Set background color
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        buttonPanel.setBackground(backgroundColor);
 
         checkBalanceButton = new JButton("Check Balance");
         checkBalanceButton.addActionListener(e -> checkBalance());
         customizeButton(checkBalanceButton);
+        buttonPanel.add(checkBalanceButton);
 
         depositButton = new JButton("Deposit Funds");
         depositButton.addActionListener(e -> depositFunds());
         customizeButton(depositButton);
+        buttonPanel.add(depositButton);
 
         withdrawButton = new JButton("Withdraw Funds");
         withdrawButton.addActionListener(e -> withdrawFunds());
         customizeButton(withdrawButton);
+        buttonPanel.add(withdrawButton);
 
         historyButton = new JButton("View Transaction History");
         historyButton.addActionListener(e -> viewTransactionHistory());
         customizeButton(historyButton);
-
-        buttonPanel.add(checkBalanceButton);
-        buttonPanel.add(depositButton);
-        buttonPanel.add(withdrawButton);
         buttonPanel.add(historyButton);
 
-        JPanel exitPanel = new JPanel();
-        exitPanel.setBackground(backgroundColor); // Set background color
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
+        mainPanel.add(buttonPanel, BorderLayout.CENTER);
+
         exitButton = new JButton("Exit");
         exitButton.addActionListener(e -> exitATM());
         customizeButton(exitButton);
-        exitPanel.add(exitButton);
+        mainPanel.add(exitButton, BorderLayout.SOUTH);
 
-        panel.add(pinPanel);
-        panel.add(buttonPanel);
-        panel.add(exitPanel);
+        add(mainPanel);
 
-        add(panel);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private void customizeButton(JButton button) {
-        button.setBackground(backgroundColor); // Set button background color
-        button.setForeground(foregroundColor); // Set button text color
+        button.setBackground(backgroundColor);
+        button.setForeground(foregroundColor);
+        button.setFocusPainted(false);
     }
 
     private void authenticatePin() {
@@ -218,17 +216,17 @@ public class ATM extends JFrame {
 
     public static void main(String[] args) {
         try {
-            // Set Nimbus Look and Feel
+           
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
-        int userPin = 2728;
-        double initialBalance = 2000;
+        int userPin = 1234;
+        double initialBalance = 3000;
 
         BankAccount userAccount = new BankAccount(initialBalance, userPin);
 
-        SwingUtilities.invokeLater(() -> new ATM(userAccount).setVisible(true));
+        SwingUtilities.invokeLater(() -> new ATM(userAccount));
     }
 }
